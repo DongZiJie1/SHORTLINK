@@ -1,0 +1,61 @@
+server:
+  port: 8002
+
+spring:
+  application:
+    name: short-link-project
+  datasource:
+#    username: root
+#    password: S11020036
+#    url: jdbc:mysql://127.0.0.1:3306/link?characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    hikari:
+#      connection-test-query: select 1
+#      connection-timeout: 20000
+#      idle-timeout: 300000
+#      maximum-pool-size: 5
+#      minimum-idle: 5
+    # ShardingSphere 对 Driver 自定义，实现分库分表等隐藏逻辑
+    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+    # ShardingSphere 配置文件路径
+    url: jdbc:shardingsphere:classpath:shardingsphere-config-${database.env:dev}.yaml
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  rabbitmq:
+    virtual-host: /
+    listener:
+      simple:
+        prefetch: 1
+        retry:
+          initial-interval: 1000
+          enabled: true
+          multiplier: 2
+          max-attempts: 3
+          stateless: true
+  mvc:
+    view:
+      prefix: /templates/
+      suffix: .html
+short-link:
+  domain:
+    default: nur.ink
+  stats:
+    locale:
+      amap-key: 3d405de7465cdb443c00f8d2c3a5707d
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
+
+rocketmq:
+  name-server: common-rocketmq-dev.magestack.cn:9876
+  producer:
+    group: short-url-static-DONG
+
+message: mq
